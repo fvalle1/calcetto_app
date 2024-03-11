@@ -51,7 +51,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   static final List<Widget> _pagesOptions = [
-    const Text("Fussball App"),
+    const Column(children: [Spacer(flex:2), Text("Fussball App"), Spacer(flex:1), Text("L'app e' pura visualizzazione si declina ogni responsabilita' per i dati mostrati."),
+      Spacer(flex: 2)
+    ]),
     const GamesPage(),
     const LeaderbordPage(),
     const AddGamePage()

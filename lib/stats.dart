@@ -35,11 +35,14 @@ class Stats {
   Stats({this.games});
 
   factory Stats.fromFetchedCSV(String json) {
+    var games = json.split("\n");
     return Stats(
-        games: json
-            .split("\n")
-            .sublist(1)
+        games: games
+            .sublist(1, games.length - 1)
             .map((g) => Partita.fromFetchedJson(g))
-            .toList());
+            .toList()
+            .reversed
+            .toList()
+            );
   }
 }

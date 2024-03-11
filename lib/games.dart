@@ -16,7 +16,7 @@ class _GamesPageState extends State<GamesPage> {
 
   Future<Stats> fetchData() async {
     final response = await http.get(Uri.parse(
-        'https://docs.google.com/spreadsheets/d/1SSFXASco6-ld0arnmjhplIbsaCvLiUdEbDG15g5qKus/export?gid=0&format=csv'));
+        'https://federicomilanesio.pythonanywhere.com/get_csv'));
 
     if (response.statusCode == 200) {
       return Stats.fromFetchedCSV(response.body);
