@@ -51,7 +51,12 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   static final List<Widget> _pagesOptions = [
-    const Column(children: [Spacer(flex:2), Text("Fussball App"), Spacer(flex:1), Text("L'app e' pura visualizzazione si declina ogni responsabilita' per i dati mostrati."),
+    const Column(children: [
+      Spacer(flex: 2),
+      Text("Fussball App"),
+      Spacer(flex: 1),
+      Text(
+          "L'app e' pura visualizzazione si declina ogni responsabilita' per i dati mostrati."),
       Spacer(flex: 2)
     ]),
     const GamesPage(),
@@ -76,10 +81,10 @@ class _MyHomePageState extends State<MyHomePage> {
           currentIndex: _selectedIndex,
           onTap: _onBottomBarTap,
           items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: "home"),
-            BottomNavigationBarItem(icon: Icon(Icons.games), label: "games"),
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+            BottomNavigationBarItem(icon: Icon(Icons.games), label: "Games"),
             BottomNavigationBarItem(
-                icon: Icon(Icons.leaderboard), label: "leaderboard")
+                icon: Icon(Icons.leaderboard), label: "Leaderboard"),
           ],
         ));
   }
