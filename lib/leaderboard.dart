@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class LeaderbordPage extends StatefulWidget {
   const LeaderbordPage({super.key});
@@ -9,22 +12,44 @@ class LeaderbordPage extends StatefulWidget {
 
 class _LeaderbordPageState extends State<LeaderbordPage> {
   late List<String> _attackers;
-
   late List<String> _defenders;
+  late Map<String, dynamic> _players;
+  String score = "elo";
+  final TextStyle _titleStyle =
+      const TextStyle(fontSize: 21, fontWeight: FontWeight.bold);
 
-  _fetchAttackers() {
-    _attackers = ["Player 1", "Player 2"];
-  }
+  void _fetchPlayers() async {
+    final response = await http.get(
+        Uri.parse('https://federicomilanesio.pythonanywhere.com/get_stats'));
 
-  _fetchDefenders() {
-    _defenders = ["Player 3", "Player 4"];
+    if (response.statusCode == 200) {
+      _players = jsonDecode(response.body);
+      for (var i = 0; i < _players.keys.length; i++) {
+        //1 header, -1 last row is empty
+        var player = _players.keys.toList()[i];
+        _attackers.add(player);
+        _defenders.add(player);
+      }
+    }
+
+    setState(() {
+      _attackers.sort((a, b) {
+        return _players[a]["Attack_elo"].compareTo(_players[b]["Attack_elo"]);
+      });
+      _defenders.sort((a, b) {
+        return _players[a]["Defense_elo"].compareTo(_players[b]["Defense_elo"]);
+      });
+      _attackers = _attackers.reversed.toList().sublist(0, 10);
+      _defenders = _defenders.reversed.toList().sublist(0, 10);
+    });
   }
 
   @override
   void initState() {
     super.initState();
-    _fetchAttackers();
-    _fetchDefenders();
+    _attackers = [];
+    _defenders = [];
+    _fetchPlayers();
   }
 
   @override
@@ -36,25 +61,37 @@ class _LeaderbordPageState extends State<LeaderbordPage> {
         Row(children: [
           SizedBox(
               width: MediaQuery.of(context).size.width * 0.45,
-              child: const Column(children: [
-                Text("Attackers", style: TextStyle(fontWeight: FontWeight.bold))
-              ])),
+              child: Column(children: [Text("Attackers", style: _titleStyle)])),
           SizedBox(
               width: MediaQuery.of(context).size.width * 0.45,
-              child: const Column(children: [
-                Text("Defenders", style: TextStyle(fontWeight: FontWeight.bold))
-              ]))
+              child: Column(children: [Text("Defenders", style: _titleStyle)]))
         ]),
         Row(children: [
           SizedBox(
               width: MediaQuery.of(context).size.width * 0.45,
               child: Column(
-                  children:
-                      _attackers.map((e) => Card(child: Text(e))).toList())),
+                  children: [
+                        _attackers.isNotEmpty
+                            ? Container()
+                            : const CircularProgressIndicator()
+                      ] +
+                      _attackers
+                          .map((e) => Card(
+                              child: Text("$e [${_players[e]['Attack_elo']}]")))
+                          .toList())),
           SizedBox(
               width: MediaQuery.of(context).size.width * 0.45,
               child: Column(
-                  children: _defenders.map((e) => Card(child: Text(e))).toList()))
+                  children: [
+                        _defenders.isNotEmpty
+                            ? Container()
+                            : const CircularProgressIndicator()
+                      ] +
+                      _defenders
+                          .map((e) => Card(
+                              child:
+                                  Text("$e [${_players[e]['Defense_elo']}]")))
+                          .toList()))
         ])
       ],
     )));
