@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fussball/gsheet.dart';
+import 'package:fussball/api.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 
@@ -28,7 +28,7 @@ class _AddGameState extends State<AddGamePage> {
   void fetchPlayers() async {
     // _players = ["Player 1", "Player 2", "Player 3", "Player 4", "Player 5"];
     final response = await http
-        .get(Uri.parse('https://federicomilanesio.pythonanywhere.com/get_csv'));
+        .get(Uri.parse('https://federicomilanesio.pythonanywhere.com/MainGroup/get_csv'));
 
     if (response.statusCode == 200) {
       var rows = response.body.split("\n");
@@ -71,7 +71,8 @@ class _AddGameState extends State<AddGamePage> {
   void initState() {
     super.initState();
     _selectedOptions = List.filled(4, null);
-    _selectedOptionsControllers = List.generate(4, (i) =>TextEditingController());
+    _selectedOptionsControllers =
+        List.generate(4, (i) => TextEditingController());
     fetchPlayers();
   }
 
@@ -111,7 +112,7 @@ class _AddGameState extends State<AddGamePage> {
                                   });
                                 },
                                 validator: _emptyValidator),
-                                if (_selectedOptions[0] == "newplayer")
+                            if (_selectedOptions[0] == "newplayer")
                               TextFormField(
                                 controller: _selectedOptionsControllers[0],
                                 decoration: const InputDecoration(
@@ -244,7 +245,7 @@ class _AddGameState extends State<AddGamePage> {
                                   : _selectedOptionsControllers[3]!.text;
                               _state =
                                   "Saved!\n[$player0-$player1 vs $player2-$player3]\n${scoreBlueController.text}-${scoreRedController.text}\n${noteController.text}";
-                              appendRow({
+                              addGameApi({
                                 "ATT. ROSSO": player2,
                                 "DIF. ROSSO": player3,
                                 "ATT. BLU": player0,

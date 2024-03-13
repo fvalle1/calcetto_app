@@ -34,6 +34,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  int _selectedIndex = 0;
+
   void _addGame(context) {
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -41,8 +43,6 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
-
-  int _selectedIndex = 0;
 
   void _onBottomBarTap(int index) {
     setState(() {
@@ -65,13 +65,32 @@ class _MyHomePageState extends State<MyHomePage> {
   ];
 
   @override
+  void initState() {
+    // _bannerAd = BannerAd(
+    //   adUnitId: 'ca-app-pub-3940256099942544/6300978111',
+    //   size: AdSize.banner,
+    //   request: AdRequest(),
+    //   listener: BannerAdListener(),
+    // );
+
+    // _bannerAd.load();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: Text(widget.title),
         ),
-        body: Center(child: _pagesOptions.elementAt(_selectedIndex)),
+        body: Center(
+            child: 
+           _pagesOptions.elementAt(_selectedIndex)),
+          // SizedBox(
+          //     height: MediaQuery.of(context).size.height * 0.1,
+          //     width: MediaQuery.of(context).size.width * 0.9,
+          //     child: _bannerAd == null ? Container() : AdWidget(ad: _bannerAd))
         floatingActionButton: FloatingActionButton(
           onPressed: () => _addGame(context),
           tooltip: 'Add Game',

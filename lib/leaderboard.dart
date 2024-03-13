@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:fussball/player.dart';
+import 'package:fussball/player_page.dart';
 import 'package:http/http.dart' as http;
 
 class LeaderbordPage extends StatefulWidget {
@@ -18,6 +20,12 @@ class _LeaderbordPageState extends State<LeaderbordPage> {
   final TextStyle _titleStyle =
       const TextStyle(fontSize: 21, fontWeight: FontWeight.bold);
 
+  void _openPlayer(context, player) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => PlayerPage(player: player)),
+    );
+  }
+
   void sortPlayers() {
     _attackers.sort((a, b) {
       return _players[a]["Attack_$_score"]
@@ -32,14 +40,23 @@ class _LeaderbordPageState extends State<LeaderbordPage> {
   }
 
   void _fetchPlayers() async {
-    final response = await http.get(
-        Uri.parse('https://federicomilanesio.pythonanywhere.com/get_stats'));
+    final response = await http.get(Uri.parse(
+        'https://federicomilanesio.pythonanywhere.com/MainGroup/get_stats'));
 
     if (response.statusCode == 200) {
       _players = jsonDecode(response.body);
       for (var i = 0; i < _players.keys.length; i++) {
         //1 header, -1 last row is empty
         var player = _players.keys.toList()[i];
+        _players[player]["Defense_winrate"] = (_players[player]
+                    ["Defense_wins"] /
+                _players[player]["Defense_games"] *
+                100)
+            .toStringAsFixed(0);
+        _players[player]["Attack_winrate"] = (_players[player]["Attack_wins"] /
+                _players[player]["Attack_games"] *
+                100)
+            .toStringAsFixed(0);
         if (_players[player]["Attack_games"] > 5) {
           _attackers.add(player);
         }
@@ -78,7 +95,7 @@ class _LeaderbordPageState extends State<LeaderbordPage> {
                 DropdownButton(
                   hint: const Text("score"),
                   value: _score,
-                  items: ['elo', 'games', 'wins', 'score']
+                  items: ['elo', 'games', 'wins', 'score', 'winrate']
                       .map((e) =>
                           DropdownMenuItem<String>(value: e, child: Text(e)))
                       .toList(),
@@ -109,14 +126,21 @@ class _LeaderbordPageState extends State<LeaderbordPage> {
                             : const CircularProgressIndicator()
                       ] +
                       _attackers
-                          .map((e) => Card(
-                              child: SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.4,
-                                  child: Center(
-                                      child: Text(_score == "score"
-                                          ? "$e [${_players[e]['Attack_$_score'].toStringAsFixed(4)}]"
-                                          : "$e [${_players[e]['Attack_$_score']}]")))))
+                          .map((e) => GestureDetector(
+                                child: Card(
+                                    child: SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.4,
+                                        child: Center(
+                                            child: Text(_score == "score"
+                                                ? "$e [${_players[e]['Attack_$_score'].toStringAsFixed(4)}]"
+                                                : "$e [${_players[e]['Attack_$_score']}]")))),
+                                onTap: () {
+                                  _openPlayer(context,
+                                      Player(name: e, data: _players[e]));
+                                },
+                              ))
                           .toList())),
           SizedBox(
               width: MediaQuery.of(context).size.width * 0.45,
@@ -127,14 +151,19 @@ class _LeaderbordPageState extends State<LeaderbordPage> {
                             : const CircularProgressIndicator()
                       ] +
                       _defenders
-                          .map((e) => Card(
-                              child: SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.4,
-                                  child: Center(
-                                      child: Text(_score == "score"
-                                          ? "$e [${_players[e]['Defense_$_score'].toStringAsFixed(4)}]"
-                                          : "$e [${_players[e]['Defense_$_score']}]")))))
+                          .map((e) => GestureDetector(
+                              child: Card(
+                                  child: SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.4,
+                                      child: Center(
+                                          child: Text(_score == "score"
+                                              ? "$e [${_players[e]['Defense_$_score'].toStringAsFixed(4)}]"
+                                              : "$e [${_players[e]['Defense_$_score']}]")))),
+                              onTap: () {
+                                _openPlayer(context,
+                                    Player(name: e, data: _players[e]));
+                              }))
                           .toList())),
         ]),
       ],

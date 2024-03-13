@@ -1,3 +1,4 @@
+
 import 'package:gsheets/gsheets.dart';
 import 'package:fussball/gsheet_credentials.dart';
 
@@ -31,3 +32,5 @@ void appendRow(dynamic data) async {
   await sheet.values.map.appendRow(data);
   print(await sheet.values.map.lastRow());
 }
+
+
