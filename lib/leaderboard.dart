@@ -133,8 +133,8 @@ class _LeaderbordPageState extends State<LeaderbordPage> {
                                             MediaQuery.of(context).size.width *
                                                 0.4,
                                         child: Center(
-                                            child: Text(_score == "score"
-                                                ? "$e [${_players[e]['Attack_$_score'].toStringAsFixed(4)}]"
+                                            child: Text((_score == "score" || _score == "elo")
+                                                ? "$e [${_players[e]['Attack_$_score'].toStringAsFixed(2)}]"
                                                 : "$e [${_players[e]['Attack_$_score']}]")))),
                                 onTap: () {
                                   _openPlayer(context,
@@ -157,8 +157,9 @@ class _LeaderbordPageState extends State<LeaderbordPage> {
                                       width: MediaQuery.of(context).size.width *
                                           0.4,
                                       child: Center(
-                                          child: Text(_score == "score"
-                                              ? "$e [${_players[e]['Defense_$_score'].toStringAsFixed(4)}]"
+                                          child: Text((_score == "score" ||
+                                                  _score == "elo")
+                                              ? "$e [${_players[e]['Defense_$_score'].toStringAsFixed(2)}]"
                                               : "$e [${_players[e]['Defense_$_score']}]")))),
                               onTap: () {
                                 _openPlayer(context,
