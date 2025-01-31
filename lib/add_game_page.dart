@@ -244,7 +244,7 @@ class _AddGameState extends State<AddGamePage> {
                                   ? _selectedOptions[3]
                                   : _selectedOptionsControllers[3]!.text;
                               _state =
-                                  "Saved!\n[$player0-$player1 vs $player2-$player3]\n${scoreBlueController.text}-${scoreRedController.text}\n${noteController.text}";
+                                  "Saved!\n[$player2-$player3 vs $player0-$player1]\n${scoreRedController.text}-${scoreBlueController.text}\n${noteController.text}";
                               addGameApi({
                                 "ATT. ROSSO": player2,
                                 "DIF. ROSSO": player3,
@@ -257,7 +257,7 @@ class _AddGameState extends State<AddGamePage> {
                                         : "ROSSO",
                                 "DATA": format.format(DateTime.now()),
                                 "SCORE":
-                                    "${scoreBlueController.text}-${scoreRedController.text}"
+                                    "${scoreRedController.text}-${scoreBlueController.text}"
                               });
                             });
                           }
