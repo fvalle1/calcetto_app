@@ -1,0 +1,2 @@
+/Users/filippovalle/Developer/fussball/android/app/.cxx/RelWithDebInfo/6e4y3h1a/x86/CMakeFiles/edit_cache.dir
+/Users/filippovalle/Developer/fussball/android/app/.cxx/RelWithDebInfo/6e4y3h1a/x86/CMakeFiles/rebuild_cache.dir
